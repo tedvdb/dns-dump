@@ -1,6 +1,7 @@
 import sys
 import csv
-from dns.resolver import Resolver, NoAnswer, NoMetaqueries
+import time
+from dns.resolver import Resolver, NoAnswer, NoMetaqueries, NoNameservers
 
 args = sys.argv
 if len(args) < 2:
@@ -30,6 +31,9 @@ for record_type in dns_types:
         print(f"No answer for type {record_type}")
     except NoMetaqueries as e:
         print(f"No metaqueries for type {record_type}")
+    except NoNameservers as e:
+        print(f"All nameservers failed to answer the query for type {record_type}: {e}")
+    time.sleep(.1)
 
 
 resultfile = open(f'dns-dump-{domain}.txt', 'w')
